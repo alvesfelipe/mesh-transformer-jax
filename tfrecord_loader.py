@@ -40,8 +40,10 @@ class TFRecordLoader:
     def sample_once(self):
         for i in self.clean_index:
             compression = "ZLIB" if "zstd" in i else ""
-
-            file = tf.data.TFRecordDataset(i, compression_type=compression).map(self.parse_fn, num_parallel_calls=tf.data.AUTOTUNE)
+            try:
+                file = tf.data.TFRecordDataset(i, compression_type=compression).map(self.parse_fn, num_parallel_calls=tf.data.AUTOTUNE)
+            except:
+                file = tf.data.TFRecordDataset(i, compression_type=compression).map(self.parse_fn, num_parallel_calls=tf.data.experimental.AUTOTUNE)
             file = file.apply(tf.data.experimental.dense_to_ragged_batch(np.prod(self.bs), drop_remainder=True))
             file = file.prefetch(10)
 

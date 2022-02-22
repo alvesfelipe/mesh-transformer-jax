@@ -135,6 +135,7 @@ def eval_step(network, data):
 
 if __name__ == "__main__":
     args = parse_args()
+    print('>>>>>>>',  args.config)
     params = json.load(open(args.config))
 
     gradient_accumulation_steps = params.get("gradient_accumulation_steps", 1)
